@@ -19,10 +19,24 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:4.0.1'
+
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// 1. JWT API: JWT를 생성하고 검증하는 인터페이스 정의
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	// 2. JWT Implementation: 실제 로직이 담긴 구현체 (런타임에만 필요)
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	// 3. JWT Jackson: JSON 데이터를 객체로 변환할 때 사용할 도구 (Jackson 활용)
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:4.0.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

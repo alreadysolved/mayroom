@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.github.alreadysolved.mayroom.repository.auth.RefreshTokenMapper">
+
+    <insert id="save" parameterType="RefreshToken">
+        INSERT INTO refresh_token (user_id, token_value, expired_at)
+        VALUES (#{userId}, #{tokenValue}, #{expiredAt})
+            ON CONFLICT (user_id)
+            DO UPDATE SET token_value = EXCLUDED.token_value, expired_at = EXCLUDED.expired_at
+    </insert>
+
+</mapper>

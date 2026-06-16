@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.github.alreadysolved.mayroom.repository.user.UserMapper">
+
+    <insert id="save" parameterType="io.github.alreadysolved.mayroom.domain.user.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users(email, role, created_at)
+        VALUES (#{email}, #{role}, #{createdAt})
+    </insert>
+
+    <select id="findById" resultType="io.github.alreadysolved.mayroom.domain.user.User">
+        SELECT *
+        FROM users
+        WHERE id=#{id}
+    </select>
+
+<!--    파라미터 안 적어줘도 됨? -->
+    <select id="findByEmail" resultType="io.github.alreadysolved.mayroom.domain.user.User">
+        SELECT *
+        FROM users
+        WHERE email=#{email}
+    </select>
+
+    <update id="updateLastLoginAt" parameterType="long">
+        UPDATE users
+        SET last_login_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateExtraInfo" parameterType="io.github.alreadysolved.mayroom.domain.user.User">
+        UPDATE users
+        SET role = #{role},
+            nickname = #{nickname}
+        WHERE email = #{email}
+    </update>
+
+
+</mapper>
