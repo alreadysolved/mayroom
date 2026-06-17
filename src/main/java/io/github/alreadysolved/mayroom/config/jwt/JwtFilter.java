@@ -36,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 Authentication authentication = jwtProvider.getAuthentication(accessToken);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException e) { // ErrorCode로 변경?
                 handleJwtException(response, "ACCESS_TOKEN_EXPIRED", "토큰이 만료되었습니다.");
                 return; // return을 붙이면, 다음 필터로 넘어가지 않고
             } catch (SignatureException e) {

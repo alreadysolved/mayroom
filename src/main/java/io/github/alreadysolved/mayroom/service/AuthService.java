@@ -10,12 +10,20 @@ import io.github.alreadysolved.mayroom.dto.CurrentUserResponse;
 import io.github.alreadysolved.mayroom.dto.ExtraInfoRequest;
 import io.github.alreadysolved.mayroom.dto.TokenRefreshRequest;
 import io.github.alreadysolved.mayroom.dto.TokenResponse;
+import io.github.alreadysolved.mayroom.exception.InvalidRefreshTokenException;
 import io.github.alreadysolved.mayroom.exception.MissingRefreshTokenException;
+import io.github.alreadysolved.mayroom.exception.RefreshTokenExpiredException;
 import io.github.alreadysolved.mayroom.exception.RefreshTokenMismatchException;
 import io.github.alreadysolved.mayroom.repository.auth.RefreshTokenRepository;
 import io.github.alreadysolved.mayroom.repository.user.UserRepository;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.MalformedKeyException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,7 +97,13 @@ public class AuthService {
         }
 
         // 토큰 유효성 검증
-        jwtProvider.validateToken(refreshTokenValue);
+        try {
+            jwtProvider.validateToken(refreshTokenValue);
+        } catch (ExpiredJwtException e) {
+            throw new RefreshTokenExpiredException();
+        } catch (JwtException e) { // SignatureException, MalformedKeyException, UnsupportedJwtException, IllegalArgumentException
+            throw new InvalidRefreshTokenException(e);
+        }
 
         /* DB에 접근하여 사용자 확인 */
         Long id = jwtProvider.extractId(refreshTokenValue);

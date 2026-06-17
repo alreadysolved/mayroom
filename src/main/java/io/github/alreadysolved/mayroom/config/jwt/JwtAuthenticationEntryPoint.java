@@ -1,5 +1,6 @@
 package io.github.alreadysolved.mayroom.config.jwt;
 
+import io.github.alreadysolved.mayroom.exception.ErrorCode;
 import io.github.alreadysolved.mayroom.exception.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +22,9 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ErrorResponse errorResponse = new ErrorResponse("ACCESS_TOKEN_MISSING", "엑세스 토큰을 전달받지 못했습니다.");
+        ErrorCode errorCode = ErrorCode.ACCESS_TOKEN_MISSING;
+
+        ErrorResponse errorResponse = new ErrorResponse(errorCode.name(), errorCode.getMessage());
         String jsonErrorResponse = objectMapper.writeValueAsString(errorResponse);
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 이게 없으면 302 에러를 내려줌
