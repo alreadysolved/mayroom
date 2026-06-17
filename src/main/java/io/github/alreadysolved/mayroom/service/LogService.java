@@ -3,6 +3,7 @@ package io.github.alreadysolved.mayroom.service;
 import io.github.alreadysolved.mayroom.domain.log.Log;
 import io.github.alreadysolved.mayroom.domain.user.User;
 import io.github.alreadysolved.mayroom.dto.*;
+import io.github.alreadysolved.mayroom.exception.LogAccessDeniedException;
 import io.github.alreadysolved.mayroom.exception.LogNotFoundException;
 import io.github.alreadysolved.mayroom.repository.log.LogRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,16 @@ public class LogService {
         Log log = logRepository.findById(logId);
 
         if (log == null) {
-            throw new LogNotFoundException("존재하지 않거나 삭제된 일지입니다.");
+            throw new LogNotFoundException(); // "존재하지 않거나 삭제된 일지입니다."
         }
 
+        // 해당 일지의 작성자인지 확인
+        if (!log.getUserId().equals(currentUserId)) {
+            throw new LogAccessDeniedException();
+        }
 
+        // dto로 변환
+        return LogDetailResponse.from(log);
     }
 
     public LogPageResponse getLogPage(User user, String keyword, int page){

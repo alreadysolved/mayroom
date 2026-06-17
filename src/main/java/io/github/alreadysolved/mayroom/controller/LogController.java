@@ -48,6 +48,8 @@ public class LogController {
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         // user를 통째로 보내지 않고 user의 id만 전달
-        // 해당 일지의 작성자인지 확인하고 반환
+        LogDetailResponse logDetailResponse = logService.getLogDetail(id, customUserDetails.getId());
+
+        return ResponseEntity.ok(logDetailResponse);
     }
 }
