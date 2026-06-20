@@ -22,10 +22,19 @@ public class MyBatisLogRepository implements LogRepository{
     }
 
     @Override
+    public int deleteById(Long id) {
+        return logMapper.deleteById(id);
+    }
+
+    @Override
     public Log findById(Long id) {
         return logMapper.findById(id);
     }
 
+    @Override
+    public Long findUserIdByLogId(Long logId) {
+        return logMapper.findUserIdByLogId(logId);
+    }
 
     @Override
     public List<LogPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {

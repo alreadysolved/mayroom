@@ -18,7 +18,7 @@ public class LogService {
 
     private final LogRepository logRepository;
 
-    public LogDetailResponse getLogDetail(Long logId, Long currentUserId) {
+    public LogDetailResponse getLogDetail(Long currentUserId, Long logId) {
         Log log = logRepository.findById(logId);
 
         if (log == null) {
@@ -34,11 +34,11 @@ public class LogService {
         return LogDetailResponse.from(log);
     }
 
-    public LogPageResponse getLogPage(User user, String keyword, int page){
+    public LogPageResponse getLogPage(Long currentUserId, String keyword, int page){
         int offset = (page - 1) * 10; // size = 10
 
-        List<LogPageElement> logPageElements = logRepository.findPageElementsByUserId(user.getId(), keyword, offset, 10);
-        int totalElements = logRepository.countByUserId(user.getId(), keyword);
+        List<LogPageElement> logPageElements = logRepository.findPageElementsByUserId(currentUserId, keyword, offset, 10);
+        int totalElements = logRepository.countByUserId(currentUserId, keyword);
         int totalPages = (int) Math.ceil((double)totalElements / 10);
 
         return LogPageResponse.builder()
@@ -49,10 +49,10 @@ public class LogService {
                 .build();
     }
 
-    public LogCreateResponse createLog(User user, LogCreateRequest logCreateRequest) {
+    public LogCreateResponse createLog(Long currentUserId, LogCreateRequest logCreateRequest) {
         Log log = Log.builder()
                 .id(null)
-                .userId(user.getId())
+                .userId(currentUserId)
                 .title(logCreateRequest.getTitle())
                 .content(logCreateRequest.getContent())
                 .logDate(logCreateRequest.getLogDate())
@@ -63,5 +63,18 @@ public class LogService {
         Long id = logRepository.save(log);
 
         return new LogCreateResponse(id);
+    }
+
+    public void deleteLog(Long currentUserId, Long logId) {
+        Long writerId = logRepository.findUserIdByLogId(logId);
+        if (writerId == null) { // 존재하지 않는 일지
+            throw new LogNotFoundException();
+        }
+
+        if(!writerId.equals(currentUserId)) { // 현재 로그인된 유저가 일지 작성자가 아닐 경우
+            throw new LogAccessDeniedException(); // "삭제할 권한이 없습니다"
+        }
+
+        logRepository.deleteById(logId);
     }
 }

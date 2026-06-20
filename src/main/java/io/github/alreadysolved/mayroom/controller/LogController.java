@@ -27,7 +27,7 @@ public class LogController {
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "1") int page) {
 
-        LogPageResponse logPageResponse = logService.getLogPage(customUserDetails.getUser(), keyword, page);
+        LogPageResponse logPageResponse = logService.getLogPage(customUserDetails.getId(), keyword, page);
 
         return ResponseEntity.ok(logPageResponse);
     }
@@ -37,7 +37,7 @@ public class LogController {
     public ResponseEntity<LogCreateResponse> createLog(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody LogCreateRequest logCreateRequest) {
-        LogCreateResponse logCreateResponse = logService.createLog(customUserDetails.getUser(), logCreateRequest);
+        LogCreateResponse logCreateResponse = logService.createLog(customUserDetails.getId(), logCreateRequest);
 
         return ResponseEntity.ok(logCreateResponse);
     }
@@ -45,11 +45,21 @@ public class LogController {
     // 일지 상세
     @GetMapping("/user/logs/{id}")
     public ResponseEntity<LogDetailResponse> getLogDetail(
-            @PathVariable Long id,
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id) {
         // user를 통째로 보내지 않고 user의 id만 전달
-        LogDetailResponse logDetailResponse = logService.getLogDetail(id, customUserDetails.getId());
+        LogDetailResponse logDetailResponse = logService.getLogDetail(customUserDetails.getId(), id);
 
         return ResponseEntity.ok(logDetailResponse);
+    }
+
+    // 일지 삭제
+    @DeleteMapping("/user/log/{id}")
+    public ResponseEntity<Void> deleteLog(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id) {
+        logService.deleteLog(customUserDetails.getId(), id);
+
+        return ResponseEntity.ok().build();
     }
 }

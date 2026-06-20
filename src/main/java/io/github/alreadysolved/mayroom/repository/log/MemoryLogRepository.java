@@ -26,10 +26,26 @@ public class MemoryLogRepository implements LogRepository{
     }
 
     @Override
+    public int deleteById(Long id) {
+        Log removedLog = logs.remove(id);
+
+        return removedLog == null ? 0 : 1;
+    }
+
+    @Override
     public Log findById(Long id) {
         return logs.get(id);
     }
 
+    @Override
+    public Long findUserIdByLogId(Long logId) {
+        Log log = logs.get(logId);
+        if(log == null) {
+            return null;
+        }
+
+        return log.getUserId();
+    }
 
     @Override
     public List<LogPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {
