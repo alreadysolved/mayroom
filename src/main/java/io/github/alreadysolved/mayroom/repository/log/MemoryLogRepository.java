@@ -26,10 +26,15 @@ public class MemoryLogRepository implements LogRepository{
     }
 
     @Override
-    public int deleteById(Long id) {
-        Log removedLog = logs.remove(id);
+    public void update(Log log) {
+        logs.put(log.getId(), log);
+    }
 
-        return removedLog == null ? 0 : 1;
+    @Override
+    public void deleteById(Long id) {
+        logs.remove(id);
+//        Log removedLog = logs.remove(id);
+//        return removedLog == null ? 0 : 1;
     }
 
     @Override

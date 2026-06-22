@@ -22,8 +22,13 @@ public class MyBatisLogRepository implements LogRepository{
     }
 
     @Override
-    public int deleteById(Long id) {
-        return logMapper.deleteById(id);
+    public void update(Log log) {
+        logMapper.update(log);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        logMapper.deleteById(id);
     }
 
     @Override

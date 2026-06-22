@@ -2,10 +2,7 @@ package io.github.alreadysolved.mayroom.controller;
 
 import io.github.alreadysolved.mayroom.domain.CustomUserDetails;
 import io.github.alreadysolved.mayroom.domain.user.User;
-import io.github.alreadysolved.mayroom.dto.LogCreateRequest;
-import io.github.alreadysolved.mayroom.dto.LogCreateResponse;
-import io.github.alreadysolved.mayroom.dto.LogDetailResponse;
-import io.github.alreadysolved.mayroom.dto.LogPageResponse;
+import io.github.alreadysolved.mayroom.dto.*;
 import io.github.alreadysolved.mayroom.service.LogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +58,16 @@ public class LogController {
         logService.deleteLog(customUserDetails.getId(), id);
 
         return ResponseEntity.ok().build();
+    }
+
+    // 일지 수정
+    @PutMapping("/user/log/{id}")
+    public ResponseEntity<LogUpdateResponse> updateLog(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id,
+            @RequestBody LogUpdateRequest logUpdateRequest) {
+        LogUpdateResponse logUpdateResponse = logService.updateLog(customUserDetails.getId(), id, logUpdateRequest);
+
+        return ResponseEntity.ok(logUpdateResponse);
     }
 }

@@ -20,15 +20,10 @@ public class LogService {
 
     public LogDetailResponse getLogDetail(Long currentUserId, Long logId) {
         Log log = logRepository.findById(logId);
-
-        if (log == null) {
-            throw new LogNotFoundException(); // "존재하지 않거나 삭제된 일지입니다."
-        }
+        if (log == null) throw new LogNotFoundException(); // "존재하지 않거나 삭제된 일지입니다."
 
         // 해당 일지의 작성자인지 확인
-        if (!log.getUserId().equals(currentUserId)) {
-            throw new LogAccessDeniedException();
-        }
+        if (!log.getUserId().equals(currentUserId)) throw new LogAccessDeniedException();
 
         // dto로 변환
         return LogDetailResponse.from(log);
@@ -66,15 +61,27 @@ public class LogService {
     }
 
     public void deleteLog(Long currentUserId, Long logId) {
-        Long writerId = logRepository.findUserIdByLogId(logId);
-        if (writerId == null) { // 존재하지 않는 일지
-            throw new LogNotFoundException();
-        }
+        Long writerId = logRepository.findUserIdByLogId(logId); // log가 null이면 null 반환
+        if (writerId == null) throw new LogNotFoundException(); // 존재하지 않는 일지
 
-        if(!writerId.equals(currentUserId)) { // 현재 로그인된 유저가 일지 작성자가 아닐 경우
-            throw new LogAccessDeniedException(); // "삭제할 권한이 없습니다"
-        }
+        if (!writerId.equals(currentUserId)) throw new LogAccessDeniedException(); // 현재 로그인된 유저가 일지 작성자가 아닐 경우 / "삭제할 권한이 없습니다"
 
         logRepository.deleteById(logId);
+    }
+
+    public LogUpdateResponse updateLog(Long currentUserId, Long logId, LogUpdateRequest logUpdateRequest) {
+        Log log = logRepository.findById(logId);
+        if (log == null) throw new LogNotFoundException(); // 존재하지 않는 일지
+
+        if (!log.getUserId().equals(currentUserId)) throw new LogAccessDeniedException(); // 수정자가 작성자가 아님
+
+        log.setTitle(logUpdateRequest.getTitle());
+        log.setContent(logUpdateRequest.getContent());
+        log.setLogDate(logUpdateRequest.getLogDate());
+        log.setUpdatedAt(LocalDateTime.now());
+
+        logRepository.update(log);
+
+        return new LogUpdateResponse(logId);
     }
 }
