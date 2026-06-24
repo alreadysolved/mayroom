@@ -110,7 +110,7 @@ public class AuthService {
         RefreshToken savedRefreshToken = refreshTokenRepository.findByUserId(id);
 
         // DB에 저장된 해당 사용자의 리프레시 토큰과 같지 않다면
-        if (!savedRefreshToken.getTokenValue().equals(refreshTokenValue)) {
+        if (!refreshTokenValue.equals(savedRefreshToken.getTokenValue())) {
             throw new RefreshTokenMismatchException("사용자의 리프레시 토큰 정보와 일치하지 않습니다.");
         }
 

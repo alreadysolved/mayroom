@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '4.0.5'
+	id 'org.springframework.boot' version '4.0.7'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -15,7 +15,19 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url = uri("https://repo.spring.io/release") }
 }
+
+// 커스텀 변수 설정
+//ext {
+//	set('springAiVersion', "1.0.0-M1")
+//}
+
+//dependencyManagement {
+//	imports {
+//		mavenBom "org.springframework.ai:spring-ai-bom:1.0.0-rc1"
+//	}
+//}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
@@ -30,6 +42,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	// 3. JWT Jackson: JSON 데이터를 객체로 변환할 때 사용할 도구 (Jackson 활용)
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+	// Spring AI Gemini
+	implementation 'org.springframework.ai:spring-ai-starter-model-google-genai:1.1.7'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

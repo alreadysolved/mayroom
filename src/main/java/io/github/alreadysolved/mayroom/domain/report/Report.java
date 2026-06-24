@@ -1,7 +1,10 @@
 package io.github.alreadysolved.mayroom.domain.report;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 public class Report {
     private Long id;
 

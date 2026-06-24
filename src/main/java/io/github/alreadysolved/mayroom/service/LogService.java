@@ -30,11 +30,12 @@ public class LogService {
     }
 
     public LogPageResponse getLogPage(Long currentUserId, String keyword, int page){
-        int offset = (page - 1) * 10; // size = 10
+        int size = 10; // 조절 가능
+        int offset = (page - 1) * size;
 
-        List<LogPageElement> logPageElements = logRepository.findPageElementsByUserId(currentUserId, keyword, offset, 10);
+        List<LogPageElement> logPageElements = logRepository.findPageElementsByUserId(currentUserId, keyword, offset, size);
         int totalElements = logRepository.countByUserId(currentUserId, keyword);
-        int totalPages = (int) Math.ceil((double)totalElements / 10);
+        int totalPages = (int) Math.ceil((double)totalElements / size);
 
         return LogPageResponse.builder()
                 .logs(logPageElements) // logPageElements -> logs로 바꿀까 ..

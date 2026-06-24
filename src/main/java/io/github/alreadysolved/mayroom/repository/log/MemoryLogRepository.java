@@ -58,7 +58,7 @@ public class MemoryLogRepository implements LogRepository{
                 // 1. WHERE: 해당 유저의 로그만 필터링
                 .filter(log -> log.getUserId().equals(userId))
                 .filter(log -> {
-                    if (keyword == null || keyword.isBlank()) {
+                    if (keyword == null || keyword.isBlank()) { // 나중에 고치자
                         return true;
                     }
 
