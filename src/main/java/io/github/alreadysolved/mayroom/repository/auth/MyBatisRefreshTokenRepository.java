@@ -18,4 +18,11 @@ public class MyBatisRefreshTokenRepository implements RefreshTokenRepository{
     public RefreshToken findByUserId(Long userId) {
         return refreshTokenMapper.findByUserId(userId);
     }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        refreshTokenMapper.deleteByUserId(userId);
+    }
+
+
 }

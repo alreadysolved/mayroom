@@ -10,15 +10,22 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class MemoryRefreshTokenRepository implements RefreshTokenRepository{
 
-    private final Map<Long, RefreshToken> store = new ConcurrentHashMap<>();
+    private final Map<Long, RefreshToken> refreshTokens = new ConcurrentHashMap<>();
 
     @Override
     public void save(RefreshToken refreshToken) {
-        store.put(refreshToken.getUserId(), refreshToken);
+        refreshTokens.put(refreshToken.getUserId(), refreshToken);
     }
 
     @Override
     public RefreshToken findByUserId(Long userId) {
-        return store.get(userId);
+        return refreshTokens.get(userId);
     }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        refreshTokens.remove(userId);
+    }
+
+
 }

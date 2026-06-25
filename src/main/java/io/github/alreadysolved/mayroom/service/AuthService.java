@@ -102,12 +102,16 @@ public class AuthService {
         } catch (ExpiredJwtException e) {
             throw new RefreshTokenExpiredException();
         } catch (JwtException e) { // SignatureException, MalformedKeyException, UnsupportedJwtException, IllegalArgumentException
-            throw new InvalidRefreshTokenException(e);
+            throw new InvalidRefreshTokenException();
         }
 
         /* DB에 접근하여 사용자 확인 */
         Long id = jwtProvider.extractId(refreshTokenValue);
         RefreshToken savedRefreshToken = refreshTokenRepository.findByUserId(id);
+
+        if (savedRefreshToken == null) { // 해당 사용자의 리프레시 토큰이 존재하지 않는데 (정상적인) 토큰을 제출했으므로 탈취된 토큰이거나, 이미 로그아웃으로 인해 무효화된 토큰
+            throw new InvalidRefreshTokenException();
+        }
 
         // DB에 저장된 해당 사용자의 리프레시 토큰과 같지 않다면
         if (!refreshTokenValue.equals(savedRefreshToken.getTokenValue())) {
@@ -130,6 +134,10 @@ public class AuthService {
         refreshTokenRepository.save(newRefreshToken);
 
         return TokenResponse.from(tokenDto);
+    }
+
+    public void logout(Long userId) {
+        refreshTokenRepository.deleteByUserId(userId);
     }
 
 
