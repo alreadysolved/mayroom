@@ -12,6 +12,7 @@ public interface LogMapper {
     void update(Log log);
     void deleteById(Long id); // 없으면 0 반환
     Log findById(Long id); // 없으면 null 반환
+    List<Log> findAllByIds(List<Long> ids);
     Long findUserIdByLogId(Long logId);
     List<LogPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size);
     int countByUserId(Long userId, String keyword);

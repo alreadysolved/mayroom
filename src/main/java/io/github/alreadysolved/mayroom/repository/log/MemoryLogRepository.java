@@ -4,8 +4,10 @@ import io.github.alreadysolved.mayroom.domain.log.Log;
 import io.github.alreadysolved.mayroom.dto.LogPageElement;
 import org.springframework.stereotype.Repository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -40,6 +42,15 @@ public class MemoryLogRepository implements LogRepository{
     @Override
     public Log findById(Long id) {
         return logs.get(id);
+    }
+
+    @Override
+    public List<Log> findAllByIds(List<Long> ids) {
+        return ids.stream()
+                .map(id -> logs.get(id))
+                .filter(log -> Objects.nonNull(log))
+                .sorted(Comparator.comparing(log -> log.getLogDate())) // logDate 기준 오름차순 정렬
+                .toList();
     }
 
     @Override

@@ -37,6 +37,11 @@ public class MyBatisLogRepository implements LogRepository{
     }
 
     @Override
+    public List<Log> findAllByIds(List<Long> ids) {
+        return logMapper.findAllByIds(ids);
+    }
+
+    @Override
     public Long findUserIdByLogId(Long logId) {
         return logMapper.findUserIdByLogId(logId);
     }

@@ -1,6 +1,8 @@
 package io.github.alreadysolved.mayroom.controller;
 
 import io.github.alreadysolved.mayroom.domain.CustomUserDetails;
+import io.github.alreadysolved.mayroom.dto.ReportGenerateRequest;
+import io.github.alreadysolved.mayroom.dto.ReportGenerateResponse;
 import io.github.alreadysolved.mayroom.dto.ReportPageResponse;
 import io.github.alreadysolved.mayroom.service.ReportService;
 import lombok.RequiredArgsConstructor;
@@ -10,13 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
 
-    @GetMapping("/user/reports")
+    // 보고서 목록 반환
+    @GetMapping("/reports")
     public ResponseEntity<ReportPageResponse> getReportPage(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String keyword,
@@ -24,5 +27,15 @@ public class ReportController {
         ReportPageResponse reportPageResponse = reportService.getReportPage(customUserDetails.getId(), keyword, page);
 
         return ResponseEntity.ok(reportPageResponse);
+    }
+
+    // ai 보고서(요약/자소서) 생성
+    @PostMapping("/reports/generate")
+    public ResponseEntity<ReportGenerateResponse> generateReport(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody ReportGenerateRequest reportGenerateRequest) {
+        ReportGenerateResponse reportGenerateResponse = reportService.generateReport(customUserDetails.getId(), reportGenerateRequest);
+
+        return ResponseEntity.ok(reportGenerateResponse);
     }
 }

@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class LogController {
 
     private final LogService logService;
 
     // 일지 목록 반환
-    @GetMapping("/user/logs")
+    @GetMapping("/logs")
     public ResponseEntity<LogPageResponse> getLogPage(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam(required = false) String keyword,
@@ -30,7 +30,7 @@ public class LogController {
     }
 
     // 일지 업로드
-    @PostMapping("/user/logs")
+    @PostMapping("/logs")
     public ResponseEntity<LogCreateResponse> createLog(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody LogCreateRequest logCreateRequest) {
@@ -40,7 +40,7 @@ public class LogController {
     }
 
     // 일지 상세
-    @GetMapping("/user/logs/{id}")
+    @GetMapping("/logs/{id}")
     public ResponseEntity<LogDetailResponse> getLogDetail(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long id) {
@@ -51,7 +51,7 @@ public class LogController {
     }
 
     // 일지 삭제
-    @DeleteMapping("/user/log/{id}")
+    @DeleteMapping("/log/{id}")
     public ResponseEntity<Void> deleteLog(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long id) {
@@ -61,7 +61,7 @@ public class LogController {
     }
 
     // 일지 수정
-    @PutMapping("/user/log/{id}")
+    @PutMapping("/log/{id}")
     public ResponseEntity<LogUpdateResponse> updateLog(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @PathVariable Long id,

@@ -1,9 +1,16 @@
 package io.github.alreadysolved.mayroom.service;
 
+import io.github.alreadysolved.mayroom.domain.log.Log;
+import io.github.alreadysolved.mayroom.domain.report.ReportType;
+import io.github.alreadysolved.mayroom.dto.ReportGenerateRequest;
+import io.github.alreadysolved.mayroom.dto.ReportGenerateResponse;
 import io.github.alreadysolved.mayroom.dto.ReportPageElement;
 import io.github.alreadysolved.mayroom.dto.ReportPageResponse;
+import io.github.alreadysolved.mayroom.exception.LogAccessDeniedException;
+import io.github.alreadysolved.mayroom.repository.log.LogRepository;
 import io.github.alreadysolved.mayroom.repository.report.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +20,8 @@ import java.util.List;
 public class ReportService {
 
     private final ReportRepository reportRepository;
+    private final LogRepository logRepository;
+    private final GoogleGenAiChatModel chatModel;
 
 
     // page = 현재 보여줄 페이지
@@ -30,5 +39,35 @@ public class ReportService {
                 .totalPages(totalPages)
                 .totalElements(totalElements)
                 .build();
+    }
+
+    public ReportGenerateResponse generateReport(Long currentUserId, ReportGenerateRequest reportGenerateRequest) {
+        List<Long> logIds = reportGenerateRequest.getLogIds();
+        List<Log> logs = logRepository.findAllByIds(logIds);
+        ReportType reportType = reportGenerateRequest.getReportType();
+
+        StringBuilder promptBuilder = new StringBuilder();
+
+        if(reportType == ReportType.SUMMARY) {
+            promptBuilder.append("당신은 사용자의 개발 일지를 분석하고 요약해주는 비서입니다.\n");
+            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 핵심 내용을 요약해주세요.\n");
+        } else if (reportType == ReportType.RESUME_DRAFT) {
+            promptBuilder.append("사용자의 개발 일지를 분석하여 자소서 초안을 작성해주세요.\n");
+            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 성장 가능성을 바탕으로 핵심 내용을 요약해주세요.\n");
+        }
+
+        promptBuilder.append("--- [일지 목록 시작] ---\n");
+        for (Log log : logs) {
+            // 현재 접속중인 유저의 일지가 아닌 게 섞여있을 경우
+            if (!log.getUserId().equals(currentUserId)) {
+                throw new LogAccessDeniedException();
+            }
+            promptBuilder.append(String.format("[%s]\n%s\n\n: ", log.getLogDate().toString(), log.getContent()));
+        }
+        promptBuilder.append("--- [일지 목록 끝] ---\n");
+
+        String content = chatModel.call(promptBuilder.toString());
+
+        return new ReportGenerateResponse(content);
     }
 }
