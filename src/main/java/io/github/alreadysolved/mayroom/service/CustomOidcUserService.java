@@ -45,8 +45,8 @@ public class CustomOidcUserService extends OidcUserService {
                     .createdAt(LocalDateTime.now())
                     .build();
 
-            // 저장 + 반환받은 id 심어줌
-            user.setId(userRepository.save(user));
+            // 저장
+            userRepository.save(user);
         }
 
         return user;

@@ -13,7 +13,15 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MemoryReportRepository implements ReportRepository{
 
     private final Map<Long, Report> reports = new ConcurrentHashMap<>();
-//    private AtomicLong sequence = new AtomicLong(1);
+    private AtomicLong sequence = new AtomicLong(1);
+
+
+    @Override
+    public void save(Report report) {
+        report.setId(sequence.getAndAdd(1));
+
+        reports.put(report.getId(), report);
+    }
 
     @Override
     public List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {
@@ -27,7 +35,8 @@ public class MemoryReportRepository implements ReportRepository{
                         .id(report.getId())
                         .title(report.getTitle())
                         .type(report.getType())
-                        .targetPeriod(report.getTargetPeriod())
+//                        .targetPeriod(report.getTargetPeriod())
+                        .createdAt(report.getCreatedAt().toLocalDate())
                         .build())
                 .toList();
     }

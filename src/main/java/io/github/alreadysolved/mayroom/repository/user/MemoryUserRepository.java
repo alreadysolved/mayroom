@@ -15,7 +15,7 @@ public class MemoryUserRepository implements UserRepository {
     private AtomicLong sequence = new AtomicLong(1);
 
     @Override
-    public Long save(User user) {
+    public void save(User user) {
         // user의 id 채워주기. 그런데 if가 꼭 필요할까?
         if (user.getId() == null) {
             user.setId(sequence.getAndAdd(1));
@@ -23,9 +23,6 @@ public class MemoryUserRepository implements UserRepository {
 
         // 저장
         users.put(user.getId(), user);
-
-        // id 반환 (getId() 2번 괜찮을까?)
-        return user.getId();
     }
 
     @Override

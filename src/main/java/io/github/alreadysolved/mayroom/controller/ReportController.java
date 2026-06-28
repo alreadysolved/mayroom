@@ -4,6 +4,7 @@ import io.github.alreadysolved.mayroom.domain.CustomUserDetails;
 import io.github.alreadysolved.mayroom.dto.ReportGenerateRequest;
 import io.github.alreadysolved.mayroom.dto.ReportGenerateResponse;
 import io.github.alreadysolved.mayroom.dto.ReportPageResponse;
+import io.github.alreadysolved.mayroom.dto.ReportSaveRequest;
 import io.github.alreadysolved.mayroom.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
-@RequestMapping("/api/user")
+@RequestMapping("/api/user/reports")
 @RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
 
     // 보고서 목록 반환
-    @GetMapping("/reports")
+    @GetMapping("")
     public ResponseEntity<ReportPageResponse> getReportPage(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestParam String keyword,
@@ -30,7 +31,7 @@ public class ReportController {
     }
 
     // ai 보고서(요약/자소서) 생성
-    @PostMapping("/reports/generate")
+    @PostMapping("/generate")
     public ResponseEntity<ReportGenerateResponse> generateReport(
             @AuthenticationPrincipal CustomUserDetails customUserDetails,
             @RequestBody ReportGenerateRequest reportGenerateRequest) {
@@ -38,4 +39,15 @@ public class ReportController {
 
         return ResponseEntity.ok(reportGenerateResponse);
     }
+
+    // 생성된 ai 보고서 저장
+    @PostMapping("")
+    public ResponseEntity<Void> saveReport(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @RequestBody ReportSaveRequest reportSaveRequest) {
+        reportService.saveReport(customUserDetails.getId(), reportSaveRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

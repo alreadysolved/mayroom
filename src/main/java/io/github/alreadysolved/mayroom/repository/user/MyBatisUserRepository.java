@@ -11,11 +11,11 @@ public class MyBatisUserRepository implements UserRepository {
 
 
     @Override
-    public Long save(User user) {
+    public void save(User user) {
         userMapper.save(user);
 
         // UserMapper.xml에서 useGeneratedKeys="true" keyProperty="id"를 했기 때문에 id 필드가 채워져있음
-        return user.getId();
+//        return user.getId();
     }
 
     @Override

@@ -1,11 +1,9 @@
 package io.github.alreadysolved.mayroom.service;
 
 import io.github.alreadysolved.mayroom.domain.log.Log;
+import io.github.alreadysolved.mayroom.domain.report.Report;
 import io.github.alreadysolved.mayroom.domain.report.ReportType;
-import io.github.alreadysolved.mayroom.dto.ReportGenerateRequest;
-import io.github.alreadysolved.mayroom.dto.ReportGenerateResponse;
-import io.github.alreadysolved.mayroom.dto.ReportPageElement;
-import io.github.alreadysolved.mayroom.dto.ReportPageResponse;
+import io.github.alreadysolved.mayroom.dto.*;
 import io.github.alreadysolved.mayroom.exception.LogAccessDeniedException;
 import io.github.alreadysolved.mayroom.repository.log.LogRepository;
 import io.github.alreadysolved.mayroom.repository.report.ReportRepository;
@@ -13,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -69,5 +68,17 @@ public class ReportService {
         String content = chatModel.call(promptBuilder.toString());
 
         return new ReportGenerateResponse(content);
+    }
+
+    public void saveReport(Long currentUserId, ReportSaveRequest reportSaveRequest) {
+        Report report = Report.builder()
+                .userId(currentUserId)
+                .type(reportSaveRequest.getReportType())
+                .title(reportSaveRequest.getTitle())
+                .content(reportSaveRequest.getContent())
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        reportRepository.save(report);
     }
 }
