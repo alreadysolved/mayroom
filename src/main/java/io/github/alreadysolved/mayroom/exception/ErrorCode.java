@@ -8,11 +8,13 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     // 'code(상태 코드, 기본 메시지)' 형태
-    // ErrorCode.LOG_NOT_FOUND.name() == "LOG_NOT_FOUND"
-    LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일지를 찾을 수 없습니다."),
+    // ErrorCode.USER_NOT_FOUND.name() == "USER_NOT_FOUND"
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저를 찾을 수 없습니다."),
+    LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 일지를 찾을 수 없습니다."),
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 보고서를 찾을 수 없습니다."),
 
     LOG_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 일지에 접근할 권한이 없습니다."),
+    REPORT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "해당 보고서에 접근할 권한이 없습니다."),
 
 
     ACCESS_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "엑세스 토큰을 전달받지 못했습니다."),

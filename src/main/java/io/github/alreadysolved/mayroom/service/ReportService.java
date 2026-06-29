@@ -5,6 +5,8 @@ import io.github.alreadysolved.mayroom.domain.report.Report;
 import io.github.alreadysolved.mayroom.domain.report.ReportType;
 import io.github.alreadysolved.mayroom.dto.*;
 import io.github.alreadysolved.mayroom.exception.LogAccessDeniedException;
+import io.github.alreadysolved.mayroom.exception.ReportAccessDeniedException;
+import io.github.alreadysolved.mayroom.exception.ReportNotFoundException;
 import io.github.alreadysolved.mayroom.repository.log.LogRepository;
 import io.github.alreadysolved.mayroom.repository.report.ReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +46,10 @@ public class ReportService {
         Report report = reportRepository.findById(reportId);
 
         // 존재하는 보고서인지 확인
-        if (report == null) {
-            // throw new ReportNotFoundException()
-        }
+        if (report == null) throw new ReportNotFoundException();
 
         // 해당 보고서의 작성자가 맞는지 확인
-        if(!report.getUserId().equals(currentUserId)) {
-            // throw new ReportAccessDeniedException()
-        }
+        if (!report.getUserId().equals(currentUserId)) throw new ReportAccessDeniedException();
 
         // dto로 변환
         return ReportDetailResponse.from(report);
@@ -98,4 +96,5 @@ public class ReportService {
 
         reportRepository.save(report);
     }
+
 }
