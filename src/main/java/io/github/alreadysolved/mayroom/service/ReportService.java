@@ -97,4 +97,15 @@ public class ReportService {
         reportRepository.save(report);
     }
 
+    public void deleteReport(Long currentUserId, Long reportId) {
+        Long writerId = reportRepository.findUserIdByReportId(reportId); // 존재하지 않는 보고서면 null 반환
+
+        // 존재하는 보고서인지 확인
+        if (writerId == null) throw new ReportNotFoundException();
+
+        // 해당 보고서의 작성자가 맞는지 확인
+        if (!writerId.equals(currentUserId)) throw new ReportAccessDeniedException();
+
+        reportRepository.deleteById(reportId);
+    }
 }

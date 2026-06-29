@@ -31,4 +31,9 @@ public class MyBatisReportRepository implements ReportRepository{
     public List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {
         return reportMapper.findPageElementsByUserId(userId, keyword, offset, size);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        reportMapper.deleteById(id);
+    }
 }

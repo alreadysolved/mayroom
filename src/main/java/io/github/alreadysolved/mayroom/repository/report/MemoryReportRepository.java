@@ -30,7 +30,11 @@ public class MemoryReportRepository implements ReportRepository{
 
     @Override
     public Long findUserIdByReportId(Long reportId) {
-        return reports.get(reportId).getUserId();
+        Report report = reports.get(reportId);
+
+        if (report == null) return null;
+
+        return report.getUserId();
     }
 
     @Override
@@ -49,5 +53,10 @@ public class MemoryReportRepository implements ReportRepository{
                         .createdAt(report.getCreatedAt().toLocalDate())
                         .build())
                 .toList();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        reports.remove(id);
     }
 }

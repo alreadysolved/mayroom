@@ -56,4 +56,13 @@ public class ReportController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReport(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id) {
+        reportService.deleteReport(customUserDetails.getId(), id);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

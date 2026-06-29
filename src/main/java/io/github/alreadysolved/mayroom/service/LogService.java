@@ -63,6 +63,7 @@ public class LogService {
 
     public void deleteLog(Long currentUserId, Long logId) {
         Long writerId = logRepository.findUserIdByLogId(logId); // log가 null이면 null 반환
+
         if (writerId == null) throw new LogNotFoundException(); // 존재하지 않는 일지
 
         if (!writerId.equals(currentUserId)) throw new LogAccessDeniedException(); // 현재 로그인된 유저가 일지 작성자가 아닐 경우 / "삭제할 권한이 없습니다"

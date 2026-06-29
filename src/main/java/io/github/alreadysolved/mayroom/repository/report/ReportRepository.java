@@ -10,4 +10,5 @@ public interface ReportRepository {
     Report findById(Long id);
     Long findUserIdByReportId(Long reportId);
     List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size);
+    void deleteById(Long id);
 }
