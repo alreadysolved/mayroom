@@ -18,6 +18,16 @@ public class MyBatisReportRepository implements ReportRepository{
     }
 
     @Override
+    public Report findById(Long id) {
+        return reportMapper.findById(id);
+    }
+
+    @Override
+    public Long findUserIdByReportId(Long reportId) {
+        return reportMapper.findUserIdByReportId(reportId);
+    }
+
+    @Override
     public List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {
         return reportMapper.findPageElementsByUserId(userId, keyword, offset, size);
     }

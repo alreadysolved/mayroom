@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface ReportRepository {
     void save(Report report);
+    Report findById(Long id);
+    Long findUserIdByReportId(Long reportId);
     List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size);
 }

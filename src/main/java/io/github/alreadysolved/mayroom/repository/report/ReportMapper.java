@@ -9,5 +9,7 @@ import java.util.List;
 @Mapper
 public interface ReportMapper {
     void save(Report report);
+    Report findById(Long id);
+    Long findUserIdByReportId(Long reportId);
     List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size);
 }

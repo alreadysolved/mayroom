@@ -24,6 +24,16 @@ public class MemoryReportRepository implements ReportRepository{
     }
 
     @Override
+    public Report findById(Long id) {
+        return reports.get(id);
+    }
+
+    @Override
+    public Long findUserIdByReportId(Long reportId) {
+        return reports.get(reportId).getUserId();
+    }
+
+    @Override
     public List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size) {
         return reports.values().stream()
                 .filter(report -> report.getUserId().equals(userId))

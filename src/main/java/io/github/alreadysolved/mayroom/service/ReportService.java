@@ -40,6 +40,23 @@ public class ReportService {
                 .build();
     }
 
+    public ReportDetailResponse getReportDetail(Long currentUserId, Long reportId) {
+        Report report = reportRepository.findById(reportId);
+
+        // 존재하는 보고서인지 확인
+        if (report == null) {
+            // throw new ReportNotFoundException()
+        }
+
+        // 해당 보고서의 작성자가 맞는지 확인
+        if(!report.getUserId().equals(currentUserId)) {
+            // throw new ReportAccessDeniedException()
+        }
+
+        // dto로 변환
+        return ReportDetailResponse.from(report);
+    }
+
     public ReportGenerateResponse generateReport(Long currentUserId, ReportGenerateRequest reportGenerateRequest) {
         List<Long> logIds = reportGenerateRequest.getLogIds();
         List<Log> logs = logRepository.findAllByIds(logIds);

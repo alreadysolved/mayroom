@@ -1,10 +1,7 @@
 package io.github.alreadysolved.mayroom.controller;
 
 import io.github.alreadysolved.mayroom.domain.CustomUserDetails;
-import io.github.alreadysolved.mayroom.dto.ReportGenerateRequest;
-import io.github.alreadysolved.mayroom.dto.ReportGenerateResponse;
-import io.github.alreadysolved.mayroom.dto.ReportPageResponse;
-import io.github.alreadysolved.mayroom.dto.ReportSaveRequest;
+import io.github.alreadysolved.mayroom.dto.*;
 import io.github.alreadysolved.mayroom.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +25,15 @@ public class ReportController {
         ReportPageResponse reportPageResponse = reportService.getReportPage(customUserDetails.getId(), keyword, page);
 
         return ResponseEntity.ok(reportPageResponse);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ReportDetailResponse> getReportDetail(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails,
+            @PathVariable Long id) {
+        ReportDetailResponse reportDetailResponse = reportService.getReportDetail(customUserDetails.getId(), id);
+
+        return ResponseEntity.ok(reportDetailResponse);
     }
 
     // ai 보고서(요약/자소서) 생성
