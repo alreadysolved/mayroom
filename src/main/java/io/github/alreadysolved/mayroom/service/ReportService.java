@@ -63,11 +63,15 @@ public class ReportService {
         StringBuilder promptBuilder = new StringBuilder();
 
         if(reportType == ReportType.SUMMARY) {
-            promptBuilder.append("당신은 사용자의 개발 일지를 분석하고 요약해주는 비서입니다.\n");
-            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 핵심 내용을 요약해주세요.\n");
+            promptBuilder.append("사용자의 개발 일지를 분석하고 요약해야 해.\n");
+            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 핵심 내용을 요약해줘.\n");
+            promptBuilder.append("날짜를 너무 딱딱 언급하지 말아줘. 언급이 필요하다면 'n월에는 ~~한 부분을 공부했다' 정도로만 사용해줘.\n");
         } else if (reportType == ReportType.RESUME_DRAFT) {
-            promptBuilder.append("사용자의 개발 일지를 분석하여 자소서 초안을 작성해주세요.\n");
-            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 성장 가능성을 바탕으로 핵심 내용을 요약해주세요.\n");
+            promptBuilder.append("사용자의 개발 일지를 분석하여 자소서 초안을 작성해줘.\n");
+            promptBuilder.append("아래 제공되는 일지 목록을 읽고, 전체적인 흐름을 파악하여 성장 가능성을 바탕으로 글을 적당히 늘려줘.\n");
+            promptBuilder.append("[적절한 제목]\n");
+            promptBuilder.append("자소서 내용\n\n");
+            promptBuilder.append("이 형식으로만 답하고 부가 설명이나 첨언(ex. 조언) 같은 건 넣지 마.\n");
         }
 
         promptBuilder.append("--- [일지 목록 시작] ---\n");
