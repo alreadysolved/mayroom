@@ -31,7 +31,7 @@ public class ReportService {
         int offset = size * (page - 1);
 
         List<ReportPageElement> reportPageElements = reportRepository.findPageElementsByUserId(currentUserId, keyword, offset, size);
-        int totalElements = 15; // 수정 예정
+        int totalElements = reportRepository.countByUserId(currentUserId, keyword);
         int totalPages = (int) Math.ceil((double)totalElements / size);
 
         return ReportPageResponse.builder()

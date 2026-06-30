@@ -33,6 +33,11 @@ public class MyBatisReportRepository implements ReportRepository{
     }
 
     @Override
+    public int countByUserId(Long userId, String keyword) {
+        return reportMapper.countByUserId(userId, keyword);
+    }
+
+    @Override
     public void deleteById(Long id) {
         reportMapper.deleteById(id);
     }

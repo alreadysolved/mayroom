@@ -56,6 +56,14 @@ public class MemoryReportRepository implements ReportRepository{
     }
 
     @Override
+    public int countByUserId(Long userId, String keyword) {
+        return (int) reports.values().stream()
+                .filter(report -> report.getUserId().equals(userId))
+                .filter(report -> report.getContent().contains(keyword))
+                .count();
+    }
+
+    @Override
     public void deleteById(Long id) {
         reports.remove(id);
     }

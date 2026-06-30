@@ -12,5 +12,6 @@ public interface ReportMapper {
     Report findById(Long id);
     Long findUserIdByReportId(Long reportId);
     List<ReportPageElement> findPageElementsByUserId(Long userId, String keyword, int offset, int size);
+    int countByUserId(Long userId, String keyword);
     void deleteById(Long id);
 }
